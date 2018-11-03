@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../base.css">
+</head>
+<body>
+<h1>Here are results</h1>
+<ul>
+  <% item.forEach(item => { %>
+    <li><%= item.keyword %></li>
+    <li><%= item.count %></li>
+  <% }); %>
+</ul>
+</body>
+
+</html>
