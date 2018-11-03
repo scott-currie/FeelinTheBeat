@@ -1,7 +1,6 @@
 {
   "name": "feelinthebeat",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -16,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/scott-currie/feelinthebeat/issues"
   },
-  "homepage": "https://github.com/scott-currie/feelinthebeat#readme"
+  "homepage": "https://github.com/scott-currie/feelinthebeat#readme",
+  "dependencies": {
+    "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
+    "ejs": "^2.6.1",
+    "express": "*",
+    "pg": "^7.6.0",
+    "superagent": "^4.0.0-beta.5"
+  },
+  "devDependencies": {},
+  "description": ""
 }
