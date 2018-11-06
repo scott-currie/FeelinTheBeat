@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../base.css">
+  </head>
+
+  <body>
+    <header>
+
+    </header>
+
+    <main>
+        <h1></h1>
+        <% console.log('values @ chooseSeed page', danceability, valence)%>
+        <% trackResults.forEach(track => { %>
+            <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
+                <input type="hidden" name="danceability" value="<%=danceability%>">
+                <input type="hidden" name="valence" value="<%=valence%>">
+                <button type="submit">Seed using this track</button>
+            </form>
+        <% }) %>
+    </main>
+      
+    <footer>
+
+    </footer>
+  </body>
+
+  </html>
