@@ -10,13 +10,14 @@
     </header>
 
     <main>
-        <h1> we innit </h1>
+        <h1></h1>
+        <% console.log('values @ chooseSeed page', danceability, valence)%>
         <% trackResults.forEach(track => { %>
-            <p>Track title: <%=track.name%></p>
-
-            <form method="post" action="/makePlayList:<%=track.id%>" class="searchForm">
-                <input type="radio" name="trackID">
-                <button type="submit"></button>
+            <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
+                <input type="hidden" name="danceability" value="<%=danceability%>">
+                <input type="hidden" name="valence" value="<%=valence%>">
+                <button type="submit">Seed using this track</button>
             </form>
         <% }) %>
     </main>
