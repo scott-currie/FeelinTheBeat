@@ -1,14 +1,20 @@
 'use strict';
-
+// build dependencies, 
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
 const pg = require('pg');
+const querystring = require('querystring');
 require('dotenv').config();
-const PORT = process.env.PORT || 3000;
-const client = new pg.Client(process.env.DATABASE_URL);
-client.connect();
-client.on('err', err => console.log(err));
+const PORT = process.env.PORT || 3001;
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.CLIENT_SECRET;
+
+let spotify_token;
+
+// const client = new pg.Client(process.env.DATABASE_URL);
+// client.connect();
+// client.on('err', err => console.log(err));
 
 
 // Bring in Goolge Vision module
@@ -29,17 +35,48 @@ app.use(express.urlencoded({extended:true}));
 app.get('/', getData);
 app.get('/vision', getGoogleVision);
 
+//?: May not need long-term
+app.get('/auth', getToken);
+
+// app.get('/refreshToken', refreshToken)
+// app.get('/gotToken', gotToken);
+app.get('/seedSearch', getSeedRecs);
+
+
 function getData(req, res) {
-  console.log(process.env.DATABASE_URL);
   const SQL = 'SELECT * FROM keywords';
 
-  client.query(SQL)
-    .then(results => {
-      console.log(results.rows[0]);
-      res.render('./', {item: results.rows});
-    })
-    .catch(err => console.log(err));
+}
 
+
+function getToken(req, res) {
+  return superagent
+    .post('https://accounts.spotify.com/api/token')
+    .send('grant_type=client_credentials')
+    .set('Authorization', 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')))
+    .then(results => {
+      process.env.SPOTIFY_CLIENT_TOKEN = results.body.access_token;
+      spotify_token = results.body.access_token;
+    })
+    .catch(err => res.send(err));
+}
+
+
+function getSeedRecs(req, res) {
+  // TODO: take in user query track and return spotify recommendations for that track
+  return getToken(req, res)
+    .then(() => {
+    let tempTrackId = '7ueISsrCCvLuA4KDs8ITzE';
+    let tempQuery = 'Delay 808s from Asia';
+    return superagent
+      .get(`https://api.spotify.com/v1/search?q=${tempQuery}&type=track`)
+      .set('Authorization', 'Bearer ' + spotify_token)
+      .then(results => {
+        res.send(results.body.tracks.items.map(track => `ID: ${track.id} name: ${track.name}`))
+      })
+      .catch(err => res.send(err));
+    })
+    .catch(err => console.log('rick is gr8'));
 }
 
 function AnnotatedImage(imageData) {
