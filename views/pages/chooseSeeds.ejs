@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="../base.css">
+  </head>
+
+  <body>
+    <header>
+
+    </header>
+
+    <main>
+        <h1> we innit </h1>
+        <% trackResults.forEach(track => { %>
+            <p>Track title: <%=track.name%></p>
+
+            <form method="post" action="/makePlayList:<%=track.id%>" class="searchForm">
+                <input type="radio" name="trackID">
+                <button type="submit"></button>
+            </form>
+        <% }) %>
+    </main>
+      
+    <footer>
+
+    </footer>
+  </body>
+
+  </html>
