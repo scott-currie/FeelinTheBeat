@@ -4,14 +4,13 @@
     <link rel="stylesheet" href="../base.css">
   </head>
   <body>
-    <%- include('./layout/header.ejs') %>
+    <%- include('../layout/header.ejs') %>
     <main>
       <form method="post" action="/spotifySearch" class="searchForm">
         <fieldset>
           <label>yuppers
             <input type="text" name="trackQuery" placeholder="Search by track" required>
           </label>
-          <input type="hidden" name="danceability" value="<%=danceability%>">
           <input type="hidden" name="valence" value="<%=valence%>">
           <input type="hidden" name="access_token" value="<%=access_token%>">
           <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
@@ -19,7 +18,7 @@
         </fieldset>
       </form>
     </main>
-      
+
     <footer></footer>
   </body>
 

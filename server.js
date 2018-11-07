@@ -6,7 +6,8 @@ const superagent = require('superagent');
 const querystring = require('query-string');
 const pg = require('pg');
 require('dotenv').config();
-const busboy = require('connect-busboy');
+const multer = require('multer');
+const imgUpload = multer({dest: 'public/images/uploaded/'});
 const fs = require('fs');
 const PORT = process.env.PORT || 3001;
 const client_id = process.env.CLIENT_ID;
@@ -40,7 +41,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended:true}));
 
-
+app.use(express.json());
 
 // Middleware pathing shite
 app.get('/', (req, res) => {
@@ -59,11 +60,9 @@ app.post('/spotifySearch', spotifySearch);
 
 app.post('/makePlaylist/:id', makePlaylist);
 
-app.post('/upload', uploadImage);
+app.post('/upload', imgUpload.single('fileUploaded'), uploadImage);
 
-app.get('/upload', getImage);
-
-app.get('/vision', getGoogleVision);
+app.get('/vision/:filename', getGoogleVision);
 
 function getToken(req, res) {
   return superagent
@@ -96,7 +95,7 @@ function getUserToken (req, res) {
     .then(response => {
       let access_token = response.body.access_token;
       let refresh_token = response.body.refresh_token;
-      res.render('pages/mood', {access_token: access_token, refresh_token: refresh_token});
+      res.render('pages/upload', {access_token: access_token, refresh_token: refresh_token});
     })
     .catch(err => {
       console.log('getuserToken err');
@@ -106,12 +105,10 @@ function getUserToken (req, res) {
 
 
 function renderSearch(req, res) {
-  let danceability = req.body.danceability;
   let valence = req.body.valence;
   let access_token = req.body.access_token;
   let refresh_token = req.body.refresh_token;
   res.render('pages/search', {
-    danceability: danceability,
     valence: valence,
     access_token: access_token,
     refresh_token: refresh_token
@@ -122,14 +119,13 @@ function spotifySearch(req, res) {
   console.log('in spotify search');
   let query = req.body.trackQuery;
   let valence = req.body.valence;
-  let danceability = req.body.danceability;
   let access_token = req.body.access_token;
   let refresh_token = req.body.refresh_token;
-  console.log('spotify token: ', spotify_token);
+  console.log('Spotify search - refresh token: ', refresh_token);
   return superagent
     .get(`https://api.spotify.com/v1/search?q=${query}&type=track`)
     .set('Authorization', 'Bearer ' + spotify_token)
-    .then(results => { 
+    .then(results => {
       console.log('got results');
       return results.body.tracks.items.map(track => {
         return {id: track.id, name: track.name, artists: track.artists.map(artist => artist.name), album_img_url: track.album.images[2].url};
@@ -137,25 +133,24 @@ function spotifySearch(req, res) {
     })
     .then(trackResults => {
       return superagent
-      .post('https://accounts.spotify.com/api/token')
-      .set('Authorization', 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')))
-      .send('grant_type=refresh_token')
-      .send(`refresh_token=${refresh_token}`)
-      .then(results => {
-        console.log('inside refresh logic');
-        if (results.status == '200') {
-          res.render('pages/chooseSeeds', {
-            trackResults: trackResults,
-            danceability: danceability,
-            valence: valence,
-            access_token: results.body.access_token,
-            refresh_token: refresh_token
-          });
-        } else {
-          throw 'a hissyfit';
-        }
-      })
-      .catch(err=> res.send(err));
+        .post('https://accounts.spotify.com/api/token')
+        .set('Authorization', 'Basic ' + (Buffer.from(client_id + ':' + client_secret).toString('base64')))
+        .send('grant_type=refresh_token')
+        .send(`refresh_token=${refresh_token}`)
+        .then(results => {
+          console.log('inside refresh logic');
+          if (results.status == '200') {
+            res.render('pages/chooseSeeds', {
+              trackResults: trackResults,
+              valence: valence,
+              access_token: results.body.access_token,
+              refresh_token: refresh_token
+            });
+          } else {
+            throw 'a hissyfit';
+          }
+        })
+        .catch(err=> res.send(err));
 
     })
     .catch(err => res.send(err));
@@ -167,13 +162,12 @@ function makePlaylist(req, res) {
   // TODO:    2. Figure out how we can specify feature ranges to the Spotify API
   // TODO:    3. Return array of related tracks from API
   let refresh_token = req.body.refresh_token,
-      access_token = req.body.access_token,
-      trackID = req.params.id,
-      valence = req.body.valence / 100,
-      paramRange = .2,
-      max_valence = valence + paramRange,
-      min_valence = valence - paramRange,
-      danceability = req.body.danceability / 100;
+    access_token = req.body.access_token,
+    trackID = req.params.id,
+    valence = req.body.valence / 100,
+    paramRange = .2,
+    max_valence = valence + paramRange,
+    min_valence = valence - paramRange;
   getToken(req, res)
     .then(() => {
       spotifyRecs(req, res, max_valence, min_valence)
@@ -220,46 +214,43 @@ function spotifyRecs (req, res, max_valence, min_valence) {
 }
 
 function AnnotatedImage(imageData) {
-
+  this.fileName = `images/uploaded/${imageData.fileName}`;
   this.joyDescriptor = imageData.faceAnnotations[0].joyLikelihood;
   this.sorrowDescriptor = imageData.faceAnnotations[0].sorrowLikelihood;
   this.angerDescriptor = imageData.faceAnnotations[0].angerLikelihood;
   this.surpriseDescriptor = imageData.faceAnnotations[0].surpriseLikelihood;
-  const descriptorToScore = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'VERY_LIKELY'];
+  const descriptorToScore = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
   this.joyScore = descriptorToScore.indexOf(this.joyDescriptor);
   this.sorrowScore = descriptorToScore.indexOf(this.sorrowDescriptor);
   this.angerScore = descriptorToScore.indexOf(this.angerDescriptor);
   this.surpriseScore = descriptorToScore.indexOf(this.surpriseDescriptor);
+  this.energy = .5; // TODO: some math
+  this.valence = ((this.joyScore - this.sorrowScore) / 8) + .5;
 }
 
 function getGoogleVision(req, res) {
   console.log('Getting Google Vision');
-  const img_url = `public/images/${req.query.filename}`;
+  const img_url = req.file.path;
+  console.log(img_url);
+  console.log('getGoogleVision access_token:', req.body.access_token);
+  console.log('getGoogleVision refresh_token:', req.body.refresh_token);
   visionClient.faceDetection(img_url)
     .then(results => {
       console.log('Sending new image');
-      res.send(new AnnotatedImage(results[0]));
+      results[0].fileName = req.file.filename;
+      const ai = new AnnotatedImage(results[0]);
+      console.log('getGoogleVision req.body', req.body);
+      res.render('pages/showimage', {image: ai, access_token: req.body.access_token, refresh_token: req.body.refresh_token});
+
     })
     .catch(err => {
       console.log(err);
     });
 }
 
-function getImage(req, res) {
-  res.render('pages/upload');
-}
-
 function uploadImage(req, res) {
-  req.pipe(req.busboy);
-  req.busboy.on('file', function(fieldname, file, filename) {
-    var fstream = fs.createWriteStream(`public/images/uploaded/${filename}`);
-    file.pipe(fstream);
-    fstream.on('close', function () {
-      res.render('pages/showimage', {image_path: `/images/uploaded/${filename}`});
-    });
-  });
+  // Call the Vision API as part of this request
+  getGoogleVision(req, res);
 }
-
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-
