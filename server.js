@@ -1,15 +1,18 @@
 'use strict';
-// build dependencies, 
+// build dependencies,
 const express = require('express');
 const cors = require('cors');
 const superagent = require('superagent');
 const querystring = require('query-string');
 const pg = require('pg');
 require('dotenv').config();
+const busboy = require('connect-busboy');
+const fs = require('fs');
 const PORT = process.env.PORT || 3001;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = 'http://localhost:3002/authRedirect';
+
 
 let spotify_token;
 
@@ -20,7 +23,6 @@ let spotify_token;
 
 // Bring in Goolge Vision module
 const vision = require('@google-cloud/vision');
-
 const visionClient = new vision.ImageAnnotatorClient({
   projectId: '112671846952584603154',
   keyFilename: './.auth/Code301Final-3b92b5c2ad48.json',
@@ -29,14 +31,14 @@ const visionClient = new vision.ImageAnnotatorClient({
 const app = express();
 app.use(cors());
 
-console.log('nu server.js')
 
-app.use(express.static('Public'));
+app.use(busboy());
+
+app.use(express.static('public'));
+
 app.set('view engine', 'ejs');
 
 app.use(express.urlencoded({extended:true}));
-
-app.get('/vision', getGoogleVision);
 
 
 
@@ -57,6 +59,11 @@ app.post('/spotifySearch', spotifySearch);
 
 app.post('/makePlaylist/:id', makePlaylist);
 
+app.post('/upload', uploadImage);
+
+app.get('/upload', getImage);
+
+app.get('/vision', getGoogleVision);
 
 function getToken(req, res) {
   return superagent
@@ -149,6 +156,7 @@ function spotifySearch(req, res) {
         }
       })
       .catch(err=> res.send(err));
+
     })
     .catch(err => res.send(err));
 }
@@ -199,7 +207,7 @@ function makePlaylist(req, res) {
 
 function spotifyRecs (req, res, max_valence, min_valence) {
   if (max_valence > 1) {
-    max_valence = 1; 
+    max_valence = 1;
   }
   if (min_valence <= 0) {
     min_valence = 0.01;
@@ -212,40 +220,46 @@ function spotifyRecs (req, res, max_valence, min_valence) {
 }
 
 function AnnotatedImage(imageData) {
-  this.img_url = imageData.img_url;
-  this.img_name = imageData.img_url.slice(imageData.img_url.lastIndexOf('/') + 1);
-  this.labels = imageData.labelAnnotations.map(la => la['description']);
+
+  this.joyDescriptor = imageData.faceAnnotations[0].joyLikelihood;
+  this.sorrowDescriptor = imageData.faceAnnotations[0].sorrowLikelihood;
+  this.angerDescriptor = imageData.faceAnnotations[0].angerLikelihood;
+  this.surpriseDescriptor = imageData.faceAnnotations[0].surpriseLikelihood;
+  const descriptorToScore = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'VERY_LIKELY'];
+  this.joyScore = descriptorToScore.indexOf(this.joyDescriptor);
+  this.sorrowScore = descriptorToScore.indexOf(this.sorrowDescriptor);
+  this.angerScore = descriptorToScore.indexOf(this.angerDescriptor);
+  this.surpriseScore = descriptorToScore.indexOf(this.surpriseDescriptor);
 }
 
 function getGoogleVision(req, res) {
-  // const img_url = 'public/images/scott_and_milo.jpg';
-  const img_url = 'public/images/milo_ugh_face.jpg';
-  // const img_url = 'https://i.imgur.com/KU3wt6U.jpg';
-  const type = 'face';
-  if (type === 'face') {
-    visionClient.labelDetection(img_url)
-      .then(results => {
-        console.log(results);
-        results[0]['img_url'] = img_url;
-        res.send(new AnnotatedImage(results[0]));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  } else {
-    visionClient.faceDetection(img_url)
-      .then(results => {
-        console.log(results[0]);
-        // console.log(results[0].faceAnnotations);
-        console.log(results[0].faceAnnotations[0].landmarks);
-        results[0]['img_url'] = img_url;
-        res.send(new AnnotatedImage(results[0]));
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
+  console.log('Getting Google Vision');
+  const img_url = `public/images/${req.query.filename}`;
+  visionClient.faceDetection(img_url)
+    .then(results => {
+      console.log('Sending new image');
+      res.send(new AnnotatedImage(results[0]));
+    })
+    .catch(err => {
+      console.log(err);
+    });
 }
+
+function getImage(req, res) {
+  res.render('pages/upload');
+}
+
+function uploadImage(req, res) {
+  req.pipe(req.busboy);
+  req.busboy.on('file', function(fieldname, file, filename) {
+    var fstream = fs.createWriteStream(`public/images/uploaded/${filename}`);
+    file.pipe(fstream);
+    fstream.on('close', function () {
+      res.render('pages/showimage', {image_path: `/images/uploaded/${filename}`});
+    });
+  });
+}
+
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
