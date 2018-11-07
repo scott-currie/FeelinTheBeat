@@ -22,7 +22,6 @@ let spotify_token;
 
 // Bring in Goolge Vision module
 const vision = require('@google-cloud/vision');
-
 const visionClient = new vision.ImageAnnotatorClient({
   projectId: '112671846952584603154',
   keyFilename: './.auth/Code301Final-3b92b5c2ad48.json',
@@ -39,14 +38,6 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended:true}));
 
 
-// app.get('/', getData);
-
-app.get('/image', getImage);
-app.get('/vision', getGoogleVision);
-
-
-
-
 // Middleware pathing shite
 app.get('/', (req, res) => res.render('pages/index'));
 
@@ -61,6 +52,8 @@ app.post('/makePlaylist/:id', makePlaylist);
 app.post('/upload', uploadImage);
 
 app.get('/upload', getImage);
+
+app.get('/vision', getGoogleVision);
 
 function getToken(req, res) {
   return superagent
@@ -159,11 +152,7 @@ function spotifyRecs (req, res, max_valence, min_valence) {
 }
 
 function AnnotatedImage(imageData) {
-  // this.img_url = imageData.img_url;
-  // this.img_name = imageData.img_url.slice(imageData.img_url.lastIndexOf('/') + 1);
-  // this.labels = imageData.labelAnnotations.map(la => la['description']);
-  // this.faceAnnotations = imageData.faceAnnotations;
-  // console.log(imageData);
+
   this.joyDescriptor = imageData.faceAnnotations[0].joyLikelihood;
   this.sorrowDescriptor = imageData.faceAnnotations[0].sorrowLikelihood;
   this.angerDescriptor = imageData.faceAnnotations[0].angerLikelihood;
@@ -186,11 +175,10 @@ function getGoogleVision(req, res) {
     .catch(err => {
       console.log(err);
     });
-  // }
 }
 
 function getImage(req, res) {
-  res.render('pages/capture');
+  res.render('pages/upload');
 }
 
 function uploadImage(req, res) {
@@ -199,7 +187,6 @@ function uploadImage(req, res) {
     var fstream = fs.createWriteStream(`public/images/uploaded/${filename}`);
     file.pipe(fstream);
     fstream.on('close', function () {
-      // res.send('upload succeeded!');
       res.render('pages/showimage', {image_path: `/images/uploaded/${filename}`});
     });
   });
