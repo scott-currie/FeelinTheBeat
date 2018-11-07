@@ -2,6 +2,10 @@
 
 }
 
+body {
+    background-image: url("br.jpg") ;
+    background-size: 100%;
+}
 body, main, html, div {
     width: 100%;
 }

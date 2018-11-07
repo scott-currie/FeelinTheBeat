@@ -1,0 +1,81 @@
+#box-container {
+    width:10px;
+    border:px solid #000;
+    text-align:center;
+    height:100px;
+    }
+  
+  body {
+      background-color:black:
+      background-size: 100%;
+  }
+  div#container{
+    background-image: url("musicnotes.jpg") ;
+    background-color:grey;
+    padding:100px;
+    text-align:center;
+    width:900px;
+    margin:0 auto;
+    
+    
+    }
+  div#content {
+    background-color:brown;
+    padding:200px; 
+    width:300px;
+    margin:0 auto;
+    height:0px;
+   border:20px solid #000;
+   text-align:center;
+   text-decoration-style: double;
+   text-anchor: middle;
+   float:center;
+   float: inherit;
+    
+  }
+  
+  .popup-container{
+      position: absolute;
+      top: 100;
+      bottom: 10;
+      right: 00;
+      left: 0;
+      background-color: rgba(0,0,0,.75);
+    
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      
+    }
+  
+  .column {
+     float: right;
+     width: 50%;
+     width: 50%;
+   }
+    
+    .popup{
+      background-color: #f2f2f2;
+      max-width: 600px;
+      padding: 30px;
+      min-width: 450px;
+      z-index: 100;
+    }
+    
+    .popup input[type = submit]{
+      margin-top: 25px;
+      
+    }
+    
+    .isvisable{
+      visibility:visible !important;
+      
+    }
+    
+    .modal-body img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    }
+  

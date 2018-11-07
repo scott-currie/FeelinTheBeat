@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="../base.css">
-  </head>
+  <%- include('./layout/head.ejs') %>
   <body>
-    <header></header>
+    <%- include('./layout/header.ejs') %>
     <main>
       <form class="mood" method="post" action="/search">
         <fieldset>
@@ -16,7 +14,7 @@
       <a href="/search">Search</a>
     </main>
       
-      <footer></footer>
+      <%- include('/layout/footer.ejs')%>
   </body>
 
 </html>

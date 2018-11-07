@@ -1,0 +1,25 @@
+div#content {
+    background-color:brown;
+    padding:150px; 
+    width:300px;
+    margin:0 auto;
+    height:0px;
+   border:20px solid #000;
+   text-align:center; 
+    
+  }
+  
+  .popup-container{
+      position: absolute;
+      top: 0;
+      bottom: 10;
+      right: 00;
+      left: 0;
+      background-color: rgba(0,0,0,.75);
+    
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    
+    }
