@@ -1,20 +1,14 @@
+
 <!DOCTYPE html>
 <html>
-  <%- include('./layout/head.ejs') %>
+   <%- include('./layout/head.ejs') %>
   <body>
-    <%- include('./layout/header.ejs') %>
+     <%- include('./layout/header.ejs') %>
     <main>
-      <form class="mood" method="post" action="/search">
-        <fieldset>
-          <label>Danceability<input name="danceability" type="range" min="10" max="90" value="50"></label>
-          <label>Valence<input name="valence" type="range" min="10" max="90" value="50"></label>
-          <button type="submit">I been feeeeeelin this waaayyyyy</button>
-        </fieldset>
-      </form>
-      <a href="/search">Search</a>
+      <a href="/auth">We love you. Now log in to Spotify</a>
     </main>
-      
-      <%- include('/layout/footer.ejs')%>
+           <%- include('/layout/footer.ejs')%> 
+   
   </body>
 
 </html>

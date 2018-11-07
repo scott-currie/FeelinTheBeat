@@ -4,8 +4,10 @@
 <body>
     <%- include('./layout/header.ejs') %>
     <main>
-        <%- results.forEach(result => { %>
-            
+
+        <% console.log('successfully navigated to playlist page'); %>
+        <% results.forEach(result => { %>
+            <% console.log(result); %>
         <% }); %>
     </main>
 

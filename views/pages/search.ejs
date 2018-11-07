@@ -6,8 +6,6 @@
   <body>
     <%- include('./layout/header.ejs') %>
     <main>
-      <% console.log(danceability); %>
-      <% console.log(valence); %>
       <form method="post" action="/spotifySearch" class="searchForm">
         <fieldset>
           <label>yuppers
@@ -15,6 +13,8 @@
           </label>
           <input type="hidden" name="danceability" value="<%=danceability%>">
           <input type="hidden" name="valence" value="<%=valence%>">
+          <input type="hidden" name="access_token" value="<%=access_token%>">
+          <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
           <button type="submit">Searchypoo</button>
         </fieldset>
       </form>
