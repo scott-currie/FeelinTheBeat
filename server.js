@@ -196,11 +196,12 @@ function getImage(req, res) {
 function uploadImage(req, res) {
   req.pipe(req.busboy);
   req.busboy.on('file', function(fieldname, file, filename) {
-      var fstream = fs.createWriteStream('public/images/' + filename);
-      file.pipe(fstream);
-      fstream.on('close', function () {
-          res.send('upload succeeded!');
-      });
+    var fstream = fs.createWriteStream(`public/images/uploaded/${filename}`);
+    file.pipe(fstream);
+    fstream.on('close', function () {
+      // res.send('upload succeeded!');
+      res.render('pages/showimage', {image_path: `/images/uploaded/${filename}`});
+    });
   });
 }
 
