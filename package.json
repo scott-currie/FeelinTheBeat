@@ -18,6 +18,13 @@
   },
   "homepage": "https://github.com/scott-currie/feelinthebeat#readme",
   "dependencies": {
-    "@google-cloud/vision": "^0.22.1"
+    "@google-cloud/vision": "^0.22.1",
+    "cors": "^2.8.5",
+    "dotenv": "^6.1.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "pg": "^7.6.0",
+    "query-string": "^6.2.0",
+    "superagent": "^4.0.0-beta.5"
   }
 }

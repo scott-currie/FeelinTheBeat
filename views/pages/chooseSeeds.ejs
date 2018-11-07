@@ -17,6 +17,8 @@
             <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
                 <input type="hidden" name="danceability" value="<%=danceability%>">
                 <input type="hidden" name="valence" value="<%=valence%>">
+                <input type="hidden" name="access_token" value="<%=access_token%>">
+                <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
                 <button type="submit">Seed using this track</button>
             </form>
         <% }) %>
