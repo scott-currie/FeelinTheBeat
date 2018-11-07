@@ -12,7 +12,8 @@ const fs = require('fs');
 const PORT = process.env.PORT || 3001;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = 'http://localhost:3002/authRedirect';
+const redirect_uri = `http://localhost:${PORT}/authRedirect`;
+console.log(redirect_uri)
 
 
 let spotify_token;
@@ -33,7 +34,6 @@ const app = express();
 app.use(cors());
 
 
-app.use(busboy());
 
 app.use(express.static('public'));
 
