@@ -9,8 +9,15 @@
 <body>
     <!-- This is the photo upload form -->
     <form method='post' action='/upload' enctype="multipart/form-data">
+      <!-- <form method='post' action='/upload'> -->
       <input type='file' name='fileUploaded'>
       <input type='submit'>
+      <% if(access_token && refresh_token) { %>
+        <%  console.log('upload.ejs access_token', access_token); %>
+        <%  console.log('upload.ejs refresh_token', refresh_token); %>
+        <input type="hidden" name="access_token" value="<%=access_token%>">
+        <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+        <% } %>
     </form>
 </body>
 </html>
