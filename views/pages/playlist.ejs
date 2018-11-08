@@ -5,10 +5,8 @@
     <%- include('../layout/header.ejs') %>
     <main>
 
-        <% console.log('successfully navigated to playlist page'); %>
-        <% results.forEach(result => { %>
-            <% console.log(result); %>
-        <% }); %>
+        <iframe src="https://open.spotify.com/embed/user/spotify/playlist/<%= playListId %>" width="650" height="380" frameborder="0" allowtransparency="true"></iframe>
+
     </main>
 
 </body>
