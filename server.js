@@ -24,6 +24,7 @@ let spotify_token;
 
 
 // Bring in Goolge Vision module
+deleteUploadedImages();  // housekeeping
 const vision = require('@google-cloud/vision');
 // Write the keyfile from the environment variable. This should protect the keyfile when deployed.
 fs.writeFileSync('auth.json', process.env.VISION_KEYFILE_JSON);
@@ -232,7 +233,7 @@ function makePlaylist(req, res) {
             return `spotify:track:${trackId}`;
           });
           console.log('EYYYYYYYYYYYYYYYY',formattedTracks, playListObj.playListId);
-
+          
           return superagent
             .post(`https://api.spotify.com/v1/playlists/${playListObj.playListId}/tracks`)
             .set('Authorization', 'Bearer ' + access_token)
@@ -272,19 +273,18 @@ function spotifyRecs (req, res, max_valence, min_valence, trackID) {
 }
 
 function AnnotatedImage(imageData) {
-  if (imageData.faceAnnotations[0]) {
-    this.fileName = `images/uploaded/${imageData.fileName}`;
-    const descriptorToScore = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
-    this.joyScore = descriptorToScore.indexOf(this.joyDescriptor);
-    this.sorrowScore = descriptorToScore.indexOf(this.sorrowDescriptor);
-    this.angerScore = descriptorToScore.indexOf(this.angerDescriptor);
-    this.surpriseScore = descriptorToScore.indexOf(this.surpriseDescriptor);
-    this.energy = .5; // TODO: some math
-    this.valence = ((this.joyScore - this.sorrowScore) / 8) + .5;
-  }
-  else {
-    this.fileName = 'images/no_face_found.jpg';
-  }
+  this.fileName = `images/uploaded/${imageData.fileName}`;
+  this.joyDescriptor = imageData.faceAnnotations[0].joyLikelihood;
+  this.sorrowDescriptor = imageData.faceAnnotations[0].sorrowLikelihood;
+  this.angerDescriptor = imageData.faceAnnotations[0].angerLikelihood;
+  this.surpriseDescriptor = imageData.faceAnnotations[0].surpriseLikelihood;
+  const descriptorToScore = ['VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'];
+  this.joyScore = descriptorToScore.indexOf(this.joyDescriptor);
+  this.sorrowScore = descriptorToScore.indexOf(this.sorrowDescriptor);
+  this.angerScore = descriptorToScore.indexOf(this.angerDescriptor);
+  this.surpriseScore = descriptorToScore.indexOf(this.surpriseDescriptor);
+  this.energy = .5; // TODO: some math
+  this.valence = ((this.joyScore - this.sorrowScore) / 8) + .5;
 }
 
 function getGoogleVision(req, res) {
