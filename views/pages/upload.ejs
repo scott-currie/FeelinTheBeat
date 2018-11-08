@@ -15,8 +15,10 @@
       <% if(access_token && refresh_token) { %>
         <%  console.log('upload.ejs access_token', access_token); %>
         <%  console.log('upload.ejs refresh_token', refresh_token); %>
+        <%  console.log('upload.ejs userid', userid); %>
         <input type="hidden" name="access_token" value="<%=access_token%>">
         <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+        <input type="hidden" name="userid" value="<%=userid%>">
         <% } %>
     </form>
 </body>

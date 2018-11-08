@@ -11,10 +11,12 @@
   <fieldset>
     <input type="hidden" name="valence" value="<%= image.valence %>">
     <% if(access_token && refresh_token) { %>
-    <%  console.log('showimage.ejs - access_token', access_token); %>
-    <%  console.log('showimage.ejs - refresh_token', refresh_token); %>
     <input type="hidden" name="access_token" value="<%=access_token%>">
     <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+    <input type="hidden" name="userid" value="<%=userid%>">
+    <input type="hidden" name="img_url" value="<%=image.fileName%>">
+    <% console.log(img_url); %>
+    <% console.log(image.fileName); %>
     <% } %>
     <button type="submit">I been feeeeeelin this waaayyyyy</button>
   </fieldset>
