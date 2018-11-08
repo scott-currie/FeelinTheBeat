@@ -1,23 +1,28 @@
-<!DOCTYPE <!DOCTYPE html>
+
+<!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Image Chooser</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-</head>
-<body>
-    <!-- This is the photo upload form -->
-    <form method='post' action='/upload' enctype="multipart/form-data">
-      <!-- <form method='post' action='/upload'> -->
-      <input type='file' name='fileUploaded'>
-      <input type='submit'>
-      <% if(access_token && refresh_token) { %>
-        <%  console.log('upload.ejs access_token', access_token); %>
-        <%  console.log('upload.ejs refresh_token', refresh_token); %>
-        <input type="hidden" name="access_token" value="<%=access_token%>">
-        <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
-        <% } %>
-    </form>
-</body>
+    <%- include('../layout/head.ejs') %>
+    
+  <body>
+      <%- include('../layout/header.ejs') %>
+      <main>
+        <div id="placeholder">
+          <h2>Please Upload Your Image</h2>
+        </div>
+        <form method='post' action='/upload' enctype="multipart/form-data">
+          <!-- <form method='post' action='/upload'> -->
+          <input type='file' name='fileUploaded'>
+          <input type='submit'>
+          <% if(access_token && refresh_token) { %>
+            <%  console.log('upload.ejs access_token', access_token); %>
+            <%  console.log('upload.ejs refresh_token', refresh_token); %>
+            <input type="hidden" name="access_token" value="<%=access_token%>">
+            <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+            <% } %>
+        </form>
+    </main>
+    <%- include('../layout/footer.ejs')%>
+
+  </body>
+
 </html>

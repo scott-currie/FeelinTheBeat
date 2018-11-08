@@ -34,7 +34,7 @@
     
   } */
   
-  .popup-container{
+  /* .popup-container{
       position: absolute;
       top: 100;
       bottom: 10;
@@ -47,9 +47,9 @@
       align-items: center;
       visibility: hidden;
       
-    }
+    } */
   
-  .column {
+  /* .column {
      float: right;
      width: 50%;
      width: 50%;
@@ -78,4 +78,4 @@
     margin-left: auto;
     margin-right: auto;
     }
-  
+   */
