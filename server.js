@@ -9,7 +9,7 @@ require('dotenv').config();
 const multer = require('multer');
 const imgUpload = multer({dest: 'public/images/uploaded/'});
 const fs = require('fs');
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = 'http://localhost:3002/authRedirect';
@@ -33,7 +33,7 @@ const app = express();
 app.use(cors());
 
 
-app.use(busboy());
+
 
 app.use(express.static('public'));
 

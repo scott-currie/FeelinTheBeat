@@ -1,11 +1,20 @@
 
 <header>
-    <h1>Feeling The beat</h1>
-    <nav class="navigation">
-        <ul>
-            <li><a href="/auth">We love you. Now fucking log in to Spotify</a>
-        </ul>
-    </nav>
+        
+        <h1>Feeling The Beat</h1>
+        
+          <div class="container">
+            <input id="toggle" type="checkbox">
+        <label class="toggle-container" for="toggle">
+          <span class="button button-toggle"></span>
+           </label>
+          <%- include('../layout/nav.ejs') %>
+          </div>
+          <div id="content">
+          <h2>Log into Spotify</h2>
+          <a href="/auth">ACCEPT</a>
 
-</header>
-   
+          <a href="/auth">REJECT</a>
+          
+                  </div>
+   </header>
