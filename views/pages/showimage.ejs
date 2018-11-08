@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html>
    <%- include('../layout/head.ejs') %>
-   <%- include('../layout/header.ejs') %>
   <body>
+    <%- include('../layout/header.ejs') %>
     <main>
        <img src="<%= image.fileName %>" id="upload">
         <!-- Upload new image form -->
@@ -25,8 +24,6 @@
           </fieldset>
         </form>
     </main>
-           <%- include('../layout/footer.ejs')%>
-
+    <%- include('../layout/footer.ejs')%>
   </body>
-
 </html>

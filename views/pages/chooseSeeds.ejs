@@ -1,11 +1,9 @@
-
 <!DOCTYPE html>
 <html>
    <%- include('../layout/head.ejs') %>
-   <%- include('../layout/header.ejs') %>
   <body>
     <main>
-            <h1></h1>
+        <%- include('../layout/header.ejs') %>
             <% console.log('values @ chooseSeed page', valence)%>
             <% trackResults.forEach(track => { %>
                 <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -17,8 +15,6 @@
                 </form>
             <% }) %>
     </main>
-           <%- include('../layout/footer.ejs')%>
-
+    <%- include('../layout/footer.ejs')%>
   </body>
-
 </html>
