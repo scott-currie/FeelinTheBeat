@@ -1,3 +1,5 @@
+
+
 #box-container {
   width:10px;
   
@@ -7,25 +9,33 @@
 
 
 body {
-  background-image: url("https://pegerteg.files.wordpress.com/2015/01/music-notes-1.jpg") ;
+  background-image: url("https://wallpaperbrowse.com/media/images/Music-Wallpaper-HD-1080p-42.jpg") ;
   background-size: 100%;
 }
 header{
-  background-image: url("musicnotes.jpg");
+  background-image: url("../images/music.jpg");
   background-color:light black;
-  padding:200px;
-  text-align:center;
-  width:800px;
+  padding:20px;
   margin:0 auto;
   text-align: center;
-  
-  }
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-family: 'Righteous', cursive;
+  font-size: 2.5em;
+  color:white;
+}
+footer {
+  font-family: 'Righteous', cursive;
+  font-size: xx-large;
+  color:white;
+}
+
 div#content {
   background-color:white;
   padding:150px; 
-  width:300px;
   margin:0 auto;
-  height:0px;
+  height:20%;
  border:20px solid black;
  text-align:center; 
  
@@ -79,11 +89,7 @@ div#content {
     overflow: hidden;
     background-color: #333;
   }
-  
-  
-  
-  
-  
+   
   .topnav .icon {
     display: none;
   }

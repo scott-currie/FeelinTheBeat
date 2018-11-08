@@ -1,8 +1,29 @@
+* {
+    box-sizing: border-box;
+    
+}
+body{
+    display:flex;
+    flex-direction: column;
+    height:100vh;
+    max-width: 960px;
+    margin: auto;
+    justify-content:space-between;
+}
+#content {
+    width:80%
+}
+header,main,footer{
+    width:100%;
+}
+
+
 @media screen and (max-width: 600px) {
     .topnav a:not(:first-child) {display: none;}
     .topnav a.icon {
       float: right;
       display: block;
+
     }
   }
   
