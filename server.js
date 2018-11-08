@@ -24,11 +24,16 @@ let spotify_token;
 
 
 // Bring in Goolge Vision module
+deleteUploadedImages();  // housekeeping
 const vision = require('@google-cloud/vision');
+// Write the keyfile from the environment variable. This should protect the keyfile when deployed.
+fs.writeFileSync('auth.json', process.env.VISION_KEYFILE_JSON);
 const visionClient = new vision.ImageAnnotatorClient({
   projectId: '112671846952584603154',
-  keyFilename: './.auth/Code301Final-3b92b5c2ad48.json',
+  keyFilename: 'auth.json'
 });
+// Delete the keyfile we made
+fs.unlinkSync('auth.json');
 
 const app = express();
 app.use(cors());
@@ -300,6 +305,15 @@ function getGoogleVision(req, res) {
 function uploadImage(req, res) {
   // Call the Vision API as part of this request
   getGoogleVision(req, res);
+}
+
+function deleteUploadedImages() {
+  fs.readdir('public/images/uploaded/', (err, files) => {
+    files.forEach(file => {
+      console.log(`public/images/uploaded/${file}`);
+      fs.unlinkSync(`public/images/uploaded/${file}`);
+    });
+  });
 }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
