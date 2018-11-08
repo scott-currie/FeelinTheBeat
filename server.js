@@ -24,7 +24,6 @@ let spotify_token;
 
 
 // Bring in Goolge Vision module
-deleteUploadedImages();  // housekeeping
 const vision = require('@google-cloud/vision');
 // Write the keyfile from the environment variable. This should protect the keyfile when deployed.
 fs.writeFileSync('auth.json', process.env.VISION_KEYFILE_JSON);
@@ -233,7 +232,7 @@ function makePlaylist(req, res) {
             return `spotify:track:${trackId}`;
           });
           console.log('EYYYYYYYYYYYYYYYY',formattedTracks, playListObj.playListId);
-          
+
           return superagent
             .post(`https://api.spotify.com/v1/playlists/${playListObj.playListId}/tracks`)
             .set('Authorization', 'Bearer ' + access_token)
