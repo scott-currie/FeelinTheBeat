@@ -10,13 +10,32 @@ body{
     margin: auto;
     justify-content:space-between;
 }
+
+
 #content {
     width:80%
 }
+
+
 header,main,footer{
     width:100%;
 }
 
+nav ul {
+   display: flex;
+   flex-direction: column;
+   font-size: large;
+   text-decoration: none;
+   color:white; 
+   align-items: flex-end;
+
+}
+nav a {
+    font-size: large;
+   text-decoration: none;
+   color:white; 
+
+}
 
 @media screen and (max-width: 600px) {
     .topnav a:not(:first-child) {display: none;}
@@ -60,5 +79,27 @@ header,main,footer{
     border-top: 0.2em solid #fff;
 }
 
+.img{
+    background-color: #eee;
+    display: flex;
+    height: 180px;
+    margin: 5px;
+    width: 260px;
+}
 
+#upload{
+    margin: auto;
+    width: 400px;
+    height:400px;
+    object-fit: contain;
+}
 
+#placeholder{
+    margin:auto;
+    width: 400px;
+    height:400px;
+    object-fit: contain;
+    background-color: gray;
+    color:white;
+
+}

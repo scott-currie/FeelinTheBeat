@@ -5,7 +5,7 @@
    <%- include('../layout/header.ejs') %>
   <body>
     <main>
-        <img src="<%= image.fileName %>">
+       <img src="<%= image.fileName %>" id="upload">
         <!-- Upload new image form -->
         <form method='post' action='/upload' enctype="multipart/form-data">
           <input type='file' name='fileUploaded'>

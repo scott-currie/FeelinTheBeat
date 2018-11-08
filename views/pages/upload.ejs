@@ -5,8 +5,10 @@
     
   <body>
       <%- include('../layout/header.ejs') %>
-   
-    <main>
+      <main>
+        <div id="placeholder">
+          <h2>Please Upload Your Image</h2>
+        </div>
         <form method='post' action='/upload' enctype="multipart/form-data">
           <!-- <form method='post' action='/upload'> -->
           <input type='file' name='fileUploaded'>

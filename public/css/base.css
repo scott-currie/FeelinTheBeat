@@ -25,6 +25,14 @@ header{
   font-size: 2.5em;
   color:white;
 }
+.links >ul{
+  text-decoration: none;
+  color: #f2f2f2;
+  
+}
+
+
+
 footer {
   font-family: 'Righteous', cursive;
   font-size: xx-large;
