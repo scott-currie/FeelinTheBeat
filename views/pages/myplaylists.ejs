@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-    <script src="main.js"></script>
-</head>
-<body>
+  <%- include('../layout/head.ejs') %>
+  <body>
+      <%- include('../layout/header.ejs') %>
     <main>
         <% userPlaylists.forEach(playlist => { %>
             <div class="playlistWrapper">
@@ -18,5 +12,6 @@
             </div>
         <% }) %>
     </main>
+    <%- include('../layout/footer.ejs') %>
 </body>
 </html>
