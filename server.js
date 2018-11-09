@@ -9,22 +9,22 @@ require('dotenv').config();
 const multer = require('multer');
 const imgUpload = multer({dest: 'public/images/uploaded/'});
 const fs = require('fs');
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 const redirect_uri = `http://localhost:${PORT}/authRedirect`;
-console.log(redirect_uri)
+
 
 
 let spotify_token;
 
-// const client = new pg.Client(process.env.DATABASE_URL);
-// client.connect();
-// client.on('err', err => console.log(err));
+const client = new pg.Client(process.env.DATABASE_URL);
+client.connect();
+client.on('err', err => console.log(err));
 
 
 // Bring in Goolge Vision module
-deleteUploadedImages();  // housekeeping
+//deleteUploadedImages(); // housekeeping
 const vision = require('@google-cloud/vision');
 // Write the keyfile from the environment variable. This should protect the keyfile when deployed.
 fs.writeFileSync('auth.json', process.env.VISION_KEYFILE_JSON);
@@ -37,7 +37,6 @@ fs.unlinkSync('auth.json');
 
 const app = express();
 app.use(cors());
-
 
 
 
@@ -70,6 +69,8 @@ app.post('/upload', imgUpload.single('fileUploaded'), uploadImage);
 
 app.get('/vision/:filename', getGoogleVision);
 
+app.post('/showMyPlaylists', showUserPlaylists);
+
 function getToken(req, res) {
   return superagent
     .post('https://accounts.spotify.com/api/token')
@@ -100,7 +101,50 @@ function getUserToken (req, res) {
     .then(response => {
       let access_token = response.body.access_token;
       let refresh_token = response.body.refresh_token;
-      res.render('pages/upload', {access_token: access_token, refresh_token: refresh_token});
+      let tokens = {access_token: access_token, refresh_token: refresh_token};
+      return tokens;
+    })
+    .then(tokens => {
+      return superagent
+        .get('https://api.spotify.com/v1/me')
+        .set('Authorization', 'Bearer ' + tokens.access_token)
+        .then(userObj => {
+          let idAndTokens = {sptfyid: JSON.parse(userObj.text).id, tokens: tokens};
+          return idAndTokens;
+        })
+        .catch(err => {
+          res.send(err);
+        });
+    })
+    .then(idAndTokens => {
+      let insertQuery = `INSERT INTO sptfyusers (sptfyid) VALUES ($1)`;
+      let sptfyid = [idAndTokens.sptfyid];
+      return client.query(insertQuery, sptfyid)
+        .then(()=> {
+          let idquery = `SELECT * FROM sptfyusers WHERE sptfyid=$1`;
+          return client.query(idquery, sptfyid)
+            .then(results => {
+              if (results.rows[0]) {
+                let userIdAndTokens = {userid: results.rows[0].userid, tokens: idAndTokens.tokens};
+                return userIdAndTokens;
+              }
+              else {
+                throw 'database err, 2nd query';
+              }
+            })
+            .catch(err => {
+              res.send(err);
+            });
+        })
+        .catch(err => {
+          res.send(err);
+        });
+    })
+    .then(userIdAndTokens => {
+      let userid = userIdAndTokens.userid;
+      let access_token = userIdAndTokens.tokens.access_token;
+      let refresh_token = userIdAndTokens.tokens.refresh_token;
+      res.render('pages/upload', {userid: userid, access_token: access_token, refresh_token: refresh_token});
     })
     .catch(err => {
       res.send(err);
@@ -109,21 +153,21 @@ function getUserToken (req, res) {
 
 
 function renderSearch(req, res) {
-  let valence = req.body.valence;
-  let access_token = req.body.access_token;
-  let refresh_token = req.body.refresh_token;
   res.render('pages/search', {
-    valence: valence,
-    access_token: access_token,
-    refresh_token: refresh_token
+    valence: req.body.valence,
+    access_token: req.body.access_token,
+    refresh_token: req.body.refresh_token,
+    userid: req.body.userid,
+    img_url: req.body.img_url
   });
 }
 
 function spotifySearch(req, res) {
-  let query = req.body.trackQuery;
-  let valence = req.body.valence;
-  let access_token = req.body.access_token;
-  let refresh_token = req.body.refresh_token;
+  let query = req.body.trackQuery,
+    valence = req.body.valence,
+    refresh_token = req.body.refresh_token,
+    userid = req.body.userid,
+    img_url = req.body.img_url;
   return superagent
     .get(`https://api.spotify.com/v1/search?q=${query}&type=track`)
     .set('Authorization', 'Bearer ' + spotify_token)
@@ -144,7 +188,10 @@ function spotifySearch(req, res) {
               trackResults: trackResults,
               valence: valence,
               access_token: results.body.access_token,
-              refresh_token: refresh_token
+              refresh_token: refresh_token,
+              userid: userid,
+              img_url: img_url,
+              seedtrackid: trackResults.id
             });
           } else {
             throw 'a hissyfit';
@@ -158,17 +205,17 @@ function spotifySearch(req, res) {
 
 function makePlaylist(req, res) {
   console.log('We hit top of MakePlayList Function');
-  // TODO: take in ID, mood parameters. Send request to spotify API for related tracks with the 'mood' features we want.
-  // TODO:    1. Need to build mood-> track feature first
-  // TODO:    2. Figure out how we can specify feature ranges to the Spotify API
-  // TODO:    3. Return array of related tracks from API
   let refresh_token = req.body.refresh_token,
     access_token = req.body.access_token,
     trackID = req.params.id,
+    userid = req.body.userid,
+    img_url = req.body.img_url,
+    seedtrackid = trackID,
     valence = req.body.valence / 100,
     paramRange = .2,
     max_valence = valence + paramRange,
     min_valence = valence - paramRange;
+  console.log('img_url at top of makePlaylist', img_url);
   getToken(req, res)
     .then(() => {
       console.log('Inside first .then Chain');
@@ -207,7 +254,8 @@ function makePlaylist(req, res) {
             })
             .catch(err=> {
               console.log('USER ID FOR PLAYLIST FUCKED');
-              res.send(err)});
+              res.send(err)
+            });
         })
         .then(userListInfo => {
           console.log('Inside third .then Chain', userListInfo.userhref);
@@ -216,11 +264,10 @@ function makePlaylist(req, res) {
             .post(userListInfo.userhref + '/playlists')
             .set('Authorization', 'Bearer ' + access_token)
             .set('Content-Type', 'application/json')
-            .send({name: "moodPlaylist"})
+            .send({name: 'moodPlaylist'})
             .then(playList => {
               console.log('third spotify return: ', playList.body.id);
               let obj = {playListId: playList.body.id, trackList: userListInfo.trackList};
-              console.log('-------------------------------------------------------------------------------------------------------------------------',obj);
               return obj;
             })
             .catch((err) => {
@@ -232,8 +279,6 @@ function makePlaylist(req, res) {
           let formattedTracks = playListObj.trackList.recs.map(trackId => {
             return `spotify:track:${trackId}`;
           });
-          console.log('EYYYYYYYYYYYYYYYY',formattedTracks, playListObj.playListId);
-          
           return superagent
             .post(`https://api.spotify.com/v1/playlists/${playListObj.playListId}/tracks`)
             .set('Authorization', 'Bearer ' + access_token)
@@ -244,12 +289,11 @@ function makePlaylist(req, res) {
               return playListObj.playListId;
             })
             .catch(err=> res.send(err));
-
         })
         .then(playListId => {
-          console.log('Inside last .then Chain');
-          // console.log('in render .then for ', playListId)
-          res.render(`pages/playlist`, {playListId: playListId})
+          console.log('Inside last .then Chain', img_url);
+          storePlaylistInDb(userid, img_url, seedtrackid, playListId);
+          res.render(`pages/playlist`, {playListId: playListId, userid: userid})
         })
     })
     .catch(err=> res.send(err));
@@ -288,14 +332,19 @@ function AnnotatedImage(imageData) {
 }
 
 function getGoogleVision(req, res) {
-
   const img_url = req.file.path;
-
+  console.log('img url at google vision', img_url);
   visionClient.faceDetection(img_url)
     .then(results => {
       results[0].fileName = req.file.filename;
       const ai = new AnnotatedImage(results[0]);
-      res.render('pages/showimage', {image: ai, access_token: req.body.access_token, refresh_token: req.body.refresh_token});
+      res.render('pages/showimage', {
+        image: ai,
+        access_token: req.body.access_token,
+        refresh_token: req.body.refresh_token,
+        userid: req.body.userid,
+        img_url: img_url
+      });
     })
     .catch(err => {
       console.log(err);
@@ -314,6 +363,23 @@ function deleteUploadedImages() {
       fs.unlinkSync(`public/images/uploaded/${file}`);
     });
   });
+}
+
+function storePlaylistInDb(userid, img_url, seedtrackid, playlistid) {
+  let insertQuery = 'INSERT INTO moodplaylists (userid, img_url, seedtrackid, playlistid) VALUES ($1, $2, $3, $4)';
+  let queryValues = [userid, img_url, seedtrackid, playlistid];
+  return client.query(insertQuery, queryValues)
+    .catch(err => console.log(err));
+}
+
+function showUserPlaylists(req, res) {
+  let selectQuery = 'SELECT * FROM moodplaylists WHERE userid=$1';
+  let queryValues = [req.body.userid];
+  return client.query(selectQuery, queryValues)
+    .then(results => {
+      console.log(results.rows);
+      res.render('pages/myplaylists', {userPlaylists: results.rows})
+    })
 }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
