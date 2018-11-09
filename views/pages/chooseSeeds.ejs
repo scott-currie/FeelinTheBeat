@@ -1,15 +1,13 @@
 <!DOCTYPE html>
 <html>
    <%- include('../layout/head.ejs') %>
-   <%- include('../layout/header.ejs') %>
   <body>
     <%- include('../layout/header.ejs') %>
-    <form method='post' action='/showMyPlaylists'>
-      <input type="hidden" name="userid" value="<%=userid%>">
-      <button type="submit">My Playlists</button>
-    </form>
     <main>
-        <h1></h1>
+        <form method='post' action='/showMyPlaylists'>
+          <input type="hidden" name="userid" value="<%=userid%>">
+          <button type="submit">My Playlists</button>
+        </form>
         <% console.log('values @ chooseSeed page', valence, userid)%>
         <% trackResults.forEach(track => { %>
           <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
@@ -23,7 +21,6 @@
           </form>
         <% }) %>
     </main>
-           <%- include('../layout/footer.ejs')%>
-
+    <%- include('../layout/footer.ejs')%>
   </body>
 </html>
