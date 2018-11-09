@@ -7,8 +7,17 @@
         <!-- This is the photo upload form -->
         <form method='post' action='/upload' enctype="multipart/form-data">
           <!-- <form method='post' action='/upload'> -->
-          <input type='file' name='fileUploaded'>
-          <input type='submit'>
+
+
+            <!-- <input type='file' name='fileUploaded'>
+          <input type='submit'> -->
+
+          <div id="chooseFileBtn" style="height: 50px; width: 100px;border: 1px dashed #BBB; cursor:pointer;" onclick="getFile()">Click to upload!</div>
+          <!-- this is your file input tag, so i hide it!-->
+          <div style='height: 0px;width:0px; overflow:hidden;'><input id="uploadFile" type="file" value="upload"/></div>
+          <!-- here you can have file submit button or you can write a simple script to upload the file automatically-->
+
+
           <% if(access_token && refresh_token) { %>
             <input type="hidden" name="access_token" value="<%=access_token%>">
             <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
@@ -17,5 +26,14 @@
         </form>
     </main>
     <%- include('../layout/footer.ejs')%>
+    <script src="js/upload.js"></script>
   </body>
 </html>
+
+<!-- <form action="#type your action here" method="POST" enctype="multipart/form-data">
+  <div id="yourBtn" style="height: 50px; width: 100px;border: 1px dashed #BBB; cursor:pointer;" onclick="getFile()">Click to upload!</div>
+  <!-- this is your file input tag, so i hide it!-->
+  <div style='height: 0px;width:0px; overflow:hidden;'><input id="upfile" type="file" value="upload"/></div>
+  <!-- here you can have file submit button or you can write a simple script to upload the file automatically-->
+  <input type="submit" value='submit' >
+</form> -->

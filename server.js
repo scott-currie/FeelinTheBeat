@@ -32,7 +32,7 @@ const visionClient = new vision.ImageAnnotatorClient({
   keyFilename: 'auth.json'
 });
 // Delete the keyfile we made
-fs.unlinkSync('auth.json');
+// fs.unlinkSync('auth.json');
 
 const app = express();
 app.use(cors());

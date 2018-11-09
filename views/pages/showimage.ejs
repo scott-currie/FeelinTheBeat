@@ -7,8 +7,9 @@
       <img src="<%= image.fileName %>">
       <!-- Upload new image form -->
       <form method='post' action='/upload' enctype="multipart/form-data">
-        <input type='file' name='fileUploaded'>
-        <button type='submit'>Upload another image</button>
+        <label for="fileChooser">Choose an image: </label>
+        <input type='file' name='fileUploaded' id="fileChooser">
+        <input type='submit'>
       </form>
       <!-- Accept this image and submit form -->
       <form class="mood" method="post" action="/search">
@@ -22,7 +23,7 @@
           <% console.log(img_url); %>
           <% console.log(image.fileName); %>
           <% } %>
-          <button type="submit">I been feeeeeelin this waaayyyyy</button>
+          <button type="submit">Get Your Custom Playlist</button>
         </fieldset>
       </form>
     </main>
