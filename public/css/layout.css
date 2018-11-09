@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    
+
 }
 body{
     display:flex;
@@ -8,7 +8,14 @@ body{
     height:100vh;
     max-width: 960px;
     margin: auto;
+    min-height: 420px;
     justify-content:space-between;
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    width: 100%;
+  }
 }
 
 
@@ -24,16 +31,7 @@ header,main,footer{
 nav ul {
    display: flex;
    flex-direction: column;
-   font-size: large;
-   text-decoration: none;
-   color:white; 
    align-items: flex-end;
-
-}
-nav a {
-    font-size: large;
-   text-decoration: none;
-   color:white; 
 
 }
 
@@ -45,7 +43,7 @@ nav a {
 
     }
   }
-  
+
   @media screen and (max-width: 600px) {
     .topnav.responsive {position: relative;}
     .topnav.responsive .icon {
@@ -59,7 +57,7 @@ nav a {
       text-align: left;
     }
   }
-  
+
   .hamburger {
     position: relative;
     display: inline-block;
