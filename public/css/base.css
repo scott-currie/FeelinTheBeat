@@ -62,10 +62,14 @@ footer {
 }
 
 .playlistWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   height: 100%;
 }
 
 .moodPlaylistImage {
+  margin: auto;
   width: 100px;
   height: 100px
 }
@@ -75,3 +79,41 @@ footer {
   color: #eee;
   font-size: 1.2em;
 }
+
+header {
+  flex-basis: 6em;
+  flex-grow: 0;
+}
+
+footer {
+  flex-basis: 3em;
+  flex-grow: 0;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+ }
+
+main {
+  flex-grow: 1;
+
+}
+
+
+
+ form {
+    margin: auto;
+ }
+
+ .seedWrapper {
+  height: 100%;
+  overflow: hidden;
+  margin: auto;
+ }
+
+ iframe {
+   margin: auto;
+ }

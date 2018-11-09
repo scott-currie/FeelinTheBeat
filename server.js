@@ -342,6 +342,8 @@ function getGoogleVision(req, res) {
     .then(results => {
       results[0].fileName = req.file.filename;
       const ai = new AnnotatedImage(results[0]);
+      console.log('AnnotatedImage:==================================================\n',
+        ai, '\n======================================================================');
       res.render('pages/showimage', {
         image: ai,
         access_token: req.body.access_token,
