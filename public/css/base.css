@@ -1,3 +1,7 @@
+* {
+  font-family: 'Righteous', cursive;
+}
+
 body {
   background-image: url("https://wallpaperbrowse.com/media/images/Music-Wallpaper-HD-1080p-42.jpg");
   background-size: 100%;
@@ -45,15 +49,6 @@ footer {
   }
 }
 
-div#content {
-  background-color: white;
-  padding: 150px;
-  margin: 0 auto;
-  height: 20%;
-  border: 20px solid black;
-  text-align: center;
-}
-
 .button {
   display: flex;
   justify-content: center;
@@ -61,8 +56,22 @@ div#content {
   background-color: #111;
   color: #eee;
   border-radius: 12px;
-  font-family: 'Righteous', cursive;
   font-size: 1.2em;
   margin: 1% auto;
   width: 60%;
+}
+
+.playlistWrapper {
+  height: 100%;
+}
+
+.moodPlaylistImage {
+  width: 100px;
+  height: 100px
+}
+
+#placeholder{
+  background-color: #111;
+  color: #eee;
+  font-size: 1.2em;
 }

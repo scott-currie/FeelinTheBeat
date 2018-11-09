@@ -43,25 +43,22 @@ nav ul {
     width: 80%;
 }
 
-#upload{
+#upload, #placeholder {
+    display: flex;
     margin: auto;
     height: 80vw;
     width: 80vw;
-    /* height:400px; */
     object-fit: contain;
+    justify-content: center;
 }
 
+/*
 #placeholder{
     margin:auto;
-    /* width: 400px;
-    height:400px; */
     width: 80vw;
     height: 80vw;
-    height: auto;
     object-fit: contain;
-    background-color: gray;
-    color:white;
-}
+} */
 
 main {
   display: flex;
