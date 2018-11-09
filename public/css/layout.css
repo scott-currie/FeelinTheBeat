@@ -48,6 +48,8 @@ nav ul {
     margin: auto;
     height: 80vw;
     width: 80vw;
+    max-width: 300px;
+    max-height: 300px;
     object-fit: contain;
     justify-content: center;
 }

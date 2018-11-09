@@ -9,17 +9,19 @@
           <button type="submit">My Playlists</button>
         </form>
         <% console.log('values @ chooseSeed page', valence, userid)%>
-        <% trackResults.forEach(track => { %>
-          <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-          <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
-            <input type="hidden" name="valence" value="<%=valence%>">
-            <input type="hidden" name="access_token" value="<%=access_token%>">
-            <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
-            <input type="hidden" name="userid" value="<%=userid%>">
-            <input type="hidden" name="img_url" value="<%=img_url%>">
-            <button type="submit">Seed using this track</button>
-          </form>
-        <% }) %>
+        <div class="seedWrapper">
+            <% trackResults.forEach(track => { %>
+              <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+              <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
+                <input type="hidden" name="valence" value="<%=valence%>">
+                <input type="hidden" name="access_token" value="<%=access_token%>">
+                <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+                <input type="hidden" name="userid" value="<%=userid%>">
+                <input type="hidden" name="img_url" value="<%=img_url%>">
+                <button type="submit">Seed using this track</button>
+              </form>
+            <% }) %>
+            </div>
     </main>
     <%- include('../layout/footer.ejs')%>
   </body>
