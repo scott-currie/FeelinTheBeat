@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <link rel="stylesheet" href="../base.css">
-  </head>
+   <%- include('../layout/head.ejs') %>
+   <%- include('../layout/header.ejs') %>
   <body>
-    <%- include('../layout/header.ejs') %>
     <main>
       <form method="post" action="/spotifySearch" class="searchForm">
         <fieldset>
@@ -20,8 +18,8 @@
         </fieldset>
       </form>
     </main>
+           <%- include('../layout/footer.ejs')%>
 
-    <footer></footer>
   </body>
 
-  </html>
+</html>
