@@ -71,6 +71,15 @@ div#content {
  border:20px solid black;
  text-align:center;
 }
+
+.button {
+  background-color: #222;
+  height: 50px; width: 100px;
+  /* border: 1px dashed #BBB; */
+  color: #eee;
+  cursor:pointer;
+}
+
 /*
 .popup-container{
     position: absolute;

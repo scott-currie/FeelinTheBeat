@@ -230,3 +230,4 @@ $RECYCLE.BIN/
 
 .auth
 public/images/uploaded
+auth.json
