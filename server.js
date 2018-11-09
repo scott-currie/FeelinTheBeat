@@ -328,7 +328,8 @@ function AnnotatedImage(imageData) {
     this.angerScore = descriptorToScore.indexOf(this.angerDescriptor);
     this.surpriseScore = descriptorToScore.indexOf(this.surpriseDescriptor);
     this.energy = .5; // TODO: some math
-    this.valence = ((this.joyScore - this.sorrowScore) / 8) + .5;
+    this.sadScore = this.sorrowScore > this.angerScore ? this.sorrowScore : this.angerScore;
+    this.valence = ((this.joyScore - this.sadScore) / 8) + .5;
   }
   else {
     this.fileName = 'images/no_face_found.jpg';
