@@ -4,25 +4,27 @@
   <body>
     <%- include('../layout/header.ejs') %>
     <main>
-       <img src="<%= image.fileName %>" id="upload">
-        <!-- Upload new image form -->
-        <form method='post' action='/upload' enctype="multipart/form-data">
-          <input type='file' name='fileUploaded'>
-          <button type='submit'>Upload another image</button>
-        </form>
-        <!-- Accept this image and submit form -->
-        <form class="mood" method="post" action="/search">
-          <fieldset>
-            <input type="hidden" name="valence" value="<%= image.valence %>">
-            <% if(access_token && refresh_token) { %>
-            <%  console.log('showimage.ejs - access_token', access_token); %>
-            <%  console.log('showimage.ejs - refresh_token', refresh_token); %>
-            <input type="hidden" name="access_token" value="<%=access_token%>">
-            <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
-            <% } %>
-            <button type="submit">I been feeeeeelin this waaayyyyy</button>
-          </fieldset>
-        </form>
+      <img src="<%= image.fileName %>">
+      <!-- Upload new image form -->
+      <form method='post' action='/upload' enctype="multipart/form-data">
+        <input type='file' name='fileUploaded'>
+        <button type='submit'>Upload another image</button>
+      </form>
+      <!-- Accept this image and submit form -->
+      <form class="mood" method="post" action="/search">
+        <fieldset>
+          <input type="hidden" name="valence" value="<%= image.valence %>">
+          <% if(access_token && refresh_token) { %>
+          <input type="hidden" name="access_token" value="<%=access_token%>">
+          <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+          <input type="hidden" name="userid" value="<%=userid%>">
+          <input type="hidden" name="img_url" value="<%=image.fileName%>">
+          <% console.log(img_url); %>
+          <% console.log(image.fileName); %>
+          <% } %>
+          <button type="submit">I been feeeeeelin this waaayyyyy</button>
+        </fieldset>
+      </form>
     </main>
     <%- include('../layout/footer.ejs')%>
   </body>

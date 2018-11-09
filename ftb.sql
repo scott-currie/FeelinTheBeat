@@ -1,12 +1,18 @@
-DROP TABLE IF EXISTS keywords;
+DROP TABLE IF EXISTS moodplaylists;
+DROP TABLE IF EXISTS sptfyusers;
 
 CREATE TABLE IF NOT EXISTS
-keywords (
-  id SERIAL PRIMARY KEY,
-  keyword VARCHAR(256) NOT NULL,
-  count INT NOT NULL
+sptfyusers (
+ userid SERIAL PRIMARY KEY,
+ sptfyid VARCHAR(255) NOT NULL
 );
 
-INSERT INTO keywords (keyword, count) VALUES ('hello', 3);
-INSERT INTO keywords (keyword, count) VALUES ('world', 11);
-INSERT INTO keywords (keyword, count) VALUES ('nice', 69);
+CREATE TABLE IF NOT EXISTS
+moodplaylists (
+ playlistdbid SERIAL PRIMARY KEY,
+ userid INT,
+ FOREIGN KEY (userid) REFERENCES sptfyusers(userid),
+ img_url TEXT,
+ playlistid VARCHAR(255),
+ seedtrackid VARCHAR(255)
+);

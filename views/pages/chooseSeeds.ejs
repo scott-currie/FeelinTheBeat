@@ -1,20 +1,29 @@
 <!DOCTYPE html>
 <html>
    <%- include('../layout/head.ejs') %>
+   <%- include('../layout/header.ejs') %>
   <body>
+    <%- include('../layout/header.ejs') %>
+    <form method='post' action='/showMyPlaylists'>
+      <input type="hidden" name="userid" value="<%=userid%>">
+      <button type="submit">My Playlists</button>
+    </form>
     <main>
-        <%- include('../layout/header.ejs') %>
-            <% console.log('values @ chooseSeed page', valence)%>
-            <% trackResults.forEach(track => { %>
-                <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-                <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
-                    <input type="hidden" name="valence" value="<%=valence%>">
-                    <input type="hidden" name="access_token" value="<%=access_token%>">
-                    <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
-                    <button type="submit">Seed using this track</button>
-                </form>
-            <% }) %>
+        <h1></h1>
+        <% console.log('values @ chooseSeed page', valence, userid)%>
+        <% trackResults.forEach(track => { %>
+          <iframe src="https://open.spotify.com/embed/track/<%=track.id%>" width="300" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+          <form method="post" action="/makePlayList/<%=track.id%>" class="searchForm">
+            <input type="hidden" name="valence" value="<%=valence%>">
+            <input type="hidden" name="access_token" value="<%=access_token%>">
+            <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+            <input type="hidden" name="userid" value="<%=userid%>">
+            <input type="hidden" name="img_url" value="<%=img_url%>">
+            <button type="submit">Seed using this track</button>
+          </form>
+        <% }) %>
     </main>
-    <%- include('../layout/footer.ejs')%>
+           <%- include('../layout/footer.ejs')%>
+
   </body>
 </html>
