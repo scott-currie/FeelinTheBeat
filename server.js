@@ -12,7 +12,7 @@ const fs = require('fs');
 const PORT = process.env.PORT || 3001;
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = `http://localhost:${PORT}/authRedirect`;
+const redirect_uri = process.env.REDIRECT_URI;
 
 
 
