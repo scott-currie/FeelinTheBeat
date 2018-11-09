@@ -5,10 +5,19 @@
     <%- include('../layout/header.ejs') %>
     <main>
       <img src="<%= image.fileName %>" id="upload">
-      <!-- Upload new image form -->
+      <div class="button" id="chooseFileBtn" style="">Select a New Picture</div>
+      <div class="button" id="uploadFileBtn" style="visibility: hidden">Upload this Picture</div>
+      <div class="button" id="getPlaylistBtn" style="">Get Your Custom Playlist</div>
+      <!-- This is the photo upload form -->
       <form method='post' action='/upload' enctype="multipart/form-data">
-        <input type='file' name='fileUploaded'>
-        <button type='submit'>Upload another image</button>
+        <div style='height: 0px;width:0px; overflow:hidden;'><input id="uploadFile" type="file" name="fileUploaded"></div>
+
+        <% if(access_token && refresh_token) { %>
+        <input type="hidden" name="access_token" value="<%=access_token%>">
+        <input type="hidden" name="refresh_token" value="<%=refresh_token%>">
+        <input type="hidden" name="userid" value="<%=userid%>">
+        <% } %>
+        <input id="submitUploadForm" class="formSubmit" type="submit" style="display:none">
       </form>
       <!-- Accept this image and submit form -->
       <form class="mood" method="post" action="/search">
@@ -22,10 +31,12 @@
           <% console.log(img_url); %>
           <% console.log(image.fileName); %>
           <% } %>
-          <button type="submit">I been feeeeeelin this waaayyyyy</button>
+          <!-- <button type="submit">Get Your Custom Playlist</button> -->
+          <input type="submit" id="submitGetPlaylistForm" style="display:none">
         </fieldset>
       </form>
     </main>
     <%- include('../layout/footer.ejs')%>
+    <script src='js/upload.js'></script>
   </body>
 </html>
