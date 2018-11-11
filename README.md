@@ -1,7 +1,8 @@
 # Feelin the Beat
 
 **Authors**: Scott Currie, Rick Flinn, Shalom Belaineh, Patrick McNamee
-**Version**: 1.0.0 (increment the patch/fix version number if you make more commits past your first submission)
+
+**Version**: 1.0.0
 
 
 ## Overview
